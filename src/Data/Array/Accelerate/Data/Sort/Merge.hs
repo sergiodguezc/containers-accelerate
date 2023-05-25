@@ -17,6 +17,8 @@ module Data.Array.Accelerate.Data.Sort.Merge (
   sort,
   sortBy,
 
+  merge,
+
 ) where
 
 import Data.Array.Accelerate
