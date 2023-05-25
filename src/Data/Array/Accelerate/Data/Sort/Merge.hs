@@ -48,6 +48,22 @@ sortBy cmp input = output
         newIndices = imap (newIndex values cmp n blockSize) values
         values'    = scatter newIndices (fill (index1 n) undef) values
 
+-- | Function which merges two vectors. The first vector is ordered.
+merge ::
+  Elt a 
+  => (Exp a -> Exp a -> Exp Ordering) -- ^ compare
+  -> Acc (Vector a) -- ^ input 1
+  ->  Exp Int -- ^ size input 1
+  -> Acc (Vector a) -- ^ input 2
+  -> Exp Int -- ^ size input 2
+  -> Acc (Vector a)
+merge cmp input1 n input2 c = output
+  where 
+    input2' = sortBy cmp input2
+    values = input1 ++ input2'
+    newIndices = imap (newIndex values cmp (n + c) n) values
+    output = scatter newIndices (fill (index1 (n + c)) undef) values
+
 
 insertion_segment_size :: Exp Int
 insertion_segment_size = 32
